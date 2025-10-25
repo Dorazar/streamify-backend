@@ -2,11 +2,14 @@ import { logger } from '../../services/logger.service.js'
 import { stationService } from './station.service.js'
 
 export async function getStations(req, res) {
+    
     try {
         const filterBy = {
             txt: req.query.txt || '',
+            loggedinUser:req.loggedinUser
             
         }
+        
         const stations = await stationService.query(filterBy)
         res.json(stations)
     } catch (err) {
@@ -28,12 +31,13 @@ export async function getStationById(req, res) {
 }
 
 export async function addStation(req, res) {
+    // console.log(req.loggedinUser)
     const { loggedinUser, body } = req
     const station = {
     title: body.title,
     tags: body.tags,
     stationImgUrl: body.stationImgUrl,
-    // createdBy: userService.getLoggedinUser(), // Later, owner is set by the backend
+    createdBy: loggedinUser, // Later, owner is set by the backend
     likedByUsers: body.likedByUsers,
     isPinned: body.isPinned,
     stationType: body.stationType,
@@ -56,6 +60,8 @@ export async function addStation(req, res) {
 export async function updateStation(req, res) {
     const { loggedinUser, body: station } = req
     station._id=req.params.id
+    station.createdBy=loggedinUser
+   
     // const { _id: userId, isAdmin } = loggedinUser
 
     // if (!isAdmin && station.owner._id !== userId) {
@@ -77,7 +83,7 @@ export async function removeStation(req, res) {
     try {
         const stationId = req.params.id
         const removedId = await stationService.remove(stationId)
-
+        
         res.send(removedId)
     } catch (err) {
         logger.error('Failed to remove station', err)
