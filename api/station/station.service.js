@@ -18,8 +18,10 @@ export const stationService = {
 }
 
 async function query(filterBy = { txt: '' }) {
+  const { loggedinUser } = asyncLocalStorage.getStore()
+
+  if (!loggedinUser) return
   try {
-    const { loggedinUser } = asyncLocalStorage.getStore()
     filterBy.loggedinUser = loggedinUser
     const criteria = await _buildCriteria(filterBy)
 
@@ -53,11 +55,10 @@ async function getById(stationId) {
 }
 
 async function remove(stationId) {
-//   const { loggedinUser } = asyncLocalStorage.getStore()
+  //   const { loggedinUser } = asyncLocalStorage.getStore()
   // const { _id: ownerId, isAdmin } = loggedinUser
 
   try {
-
     const criteria = {
       _id: ObjectId.createFromHexString(stationId),
     }

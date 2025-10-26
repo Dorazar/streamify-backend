@@ -6,7 +6,7 @@ export async function getStations(req, res) {
     try {
         const filterBy = {
             txt: req.query.txt || '',
-            loggedinUser:req.loggedinUser
+            loggedinUser:req.loggedinUser || ''
             
         }
         
