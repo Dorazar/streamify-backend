@@ -71,7 +71,7 @@ async function getSpotifyItems(item, query, limit) {
     search: async () => await getSearchedTracks(query, limit),
     albums: async () => await getSearchedAlbums(query, limit),
     getAlbumNewRelease: async () => await getAlbumNewRelease(query, limit),
-    getTrackPlaylist:async () => await getTracksPlaylist(query, limit),
+    getTracksPlaylist:async () => await getTracksPlaylist(query, limit),
     getGenres:async () => await getGenres(),
     getGenrePlaylists:async () => await getGenrePlaylists(query)
   }

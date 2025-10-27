@@ -15,7 +15,3 @@ export async function getSpotifyItems(req, res) {
     }
 }
 
-async function getTrack(trackId) {
-  const endpoint = `/tracks/${trackId}`
-  return makeSpotifyRequest(endpoint)
-}
