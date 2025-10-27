@@ -60,7 +60,7 @@ async function makeSpotifyRequest(endpoint) {
 }
 
 async function getSpotifyItems(item, query, limit) {
-  console.log('item,query:', item, query)
+  // console.log('item,query:', item, query)
   const funcs = {
     track: async () => await searchTracks(query),
     artists: async () => await getSearchArtists(query),
@@ -120,7 +120,7 @@ async function searchArtists(query, limit = 5, offset = 0) {
 
 async function getSearchArtists(query, limit = 5, offset = 0) {
   const artistsFromSpotify = await searchArtists(query, limit, offset)
-  console.log('artistsFromSpotify:', artistsFromSpotify)
+  // console.log('artistsFromSpotify:', artistsFromSpotify)
   return artistsFromSpotify.artists.items.map((artist) => ({
     spotifyId: artist.id,
     name: artist.name,

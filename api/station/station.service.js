@@ -18,10 +18,11 @@ export const stationService = {
 }
 
 async function query(filterBy = { txt: '' }) {
-  const { loggedinUser } = asyncLocalStorage.getStore()
-
-  if (!loggedinUser) return
   try {
+    var stations = []
+    const { loggedinUser } = asyncLocalStorage.getStore()
+    console.log(loggedinUser)
+    if (!loggedinUser) return stations
     filterBy.loggedinUser = loggedinUser
     const criteria = await _buildCriteria(filterBy)
 
@@ -30,7 +31,7 @@ async function query(filterBy = { txt: '' }) {
 
     const stationCursor = await collection.find({ 'createdBy._id': criteria.loggedinUser._id })
 
-    const stations = stationCursor.toArray()
+    stations = stationCursor.toArray()
 
     return stations
   } catch (err) {
