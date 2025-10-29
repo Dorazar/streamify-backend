@@ -42,22 +42,7 @@ async function getAccessToken() {
   }
 }
 
-async function makeSpotifyRequest(endpoint) {
-  const token = await getAccessToken()
-  // console.log(token);
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Spotify API request failed: ${response.status}`)
-  }
-
-  return response.json()
-}
 
 async function getSpotifyItems(item, query, limit) {
   // console.log('item,query:', item, query)
@@ -67,6 +52,7 @@ async function getSpotifyItems(item, query, limit) {
     artistData: async () => await getArtistData(query),
     artist: async () => await getArtist(query),
     getFullTrackData: async () => await getFullTrackData(query),
+    album:async() => await getAlbum(query),
     albumReleases: async () => await getNewAlbumsReleases(),
     search: async () => await getSearchedTracks(query, limit),
     albums: async () => await getSearchedAlbums(query, limit),
@@ -108,6 +94,19 @@ function formatDuration(durationMs) {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
+async function makeSpotifyRequest(endpoint) {
+  const token = await getAccessToken()
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    throw new Error(`Spotify API request failed: ${response.status}`)
+  }
+  return response.json()
+}
+
 async function searchTracks(query, limit = 5, offset = 0) {
   const endpoint = `/search?q=${encodeURIComponent(query)}&type=track&artist&album&limit=${limit}&offset=${offset}`
   return makeSpotifyRequest(endpoint)
@@ -118,7 +117,7 @@ async function searchArtists(query, limit = 5, offset = 0) {
   return makeSpotifyRequest(endpoint)
 }
 
-async function getSearchArtists(query, limit = 5, offset = 0) {
+async function getSearchArtists(query, limit = 7, offset = 0) {
   const artistsFromSpotify = await searchArtists(query, limit, offset)
   // console.log('artistsFromSpotify:', artistsFromSpotify)
   return artistsFromSpotify.artists.items.map((artist) => ({
@@ -128,11 +127,10 @@ async function getSearchArtists(query, limit = 5, offset = 0) {
   }))
 }
 
-async function getNewAlbumsReleases(limit = 20, offset = 0) {
+async function getNewAlbumsReleases(limit = 21, offset = 0) {
   try {
     const endpoint = `/browse/new-releases?limit=${limit}&offset=${offset}&country=US`
     const response = await makeSpotifyRequest(endpoint)
-
     // Map albums to clean object format
     const albums = response.albums.items.map((album) => ({
       id: album.id,
