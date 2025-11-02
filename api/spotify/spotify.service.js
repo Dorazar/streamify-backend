@@ -129,7 +129,7 @@ async function getSearchArtists(query, limit = 7, offset = 0) {
 
 async function getNewAlbumsReleases(limit = 21, offset = 0) {
   try {
-    const endpoint = `/browse/new-releases?limit=${limit}&offset=${offset}&country=US`
+    const endpoint = `/browse/new-releases?limit=${limit}&offset=${offset}&market=IL`
     const response = await makeSpotifyRequest(endpoint)
     // Map albums to clean object format
     const albums = response.albums.items.map((album) => ({
