@@ -42,8 +42,6 @@ async function getAccessToken() {
   }
 }
 
-
-
 async function getSpotifyItems(item, query, limit) {
   // console.log('item,query:', item, query)
   const funcs = {
@@ -65,7 +63,9 @@ async function getSpotifyItems(item, query, limit) {
 }
 
 async function getSearchedTracks(query, limit = 5, offset = 0) {
+  
   const tracksFromSpotify = await searchTracks(query, limit, offset)
+ 
   let tracks = tracksFromSpotify.tracks.items
 
   tracks = tracks.map((track) => {
@@ -83,7 +83,7 @@ async function getSearchedTracks(query, limit = 5, offset = 0) {
       youtubeId: null,
     }
   })
-
+//  console.log('tracks:', tracks) 
   return tracks
 }
 
@@ -104,16 +104,17 @@ async function makeSpotifyRequest(endpoint) {
   if (!response.ok) {
     throw new Error(`Spotify API request failed: ${response.status}`)
   }
+  
   return response.json()
 }
 
 async function searchTracks(query, limit = 5, offset = 0) {
-  const endpoint = `/search?q=${encodeURIComponent(query)}&type=track&artist&album&limit=${limit}&offset=${offset}`
+  const endpoint = `/search?q=${encodeURIComponent(query)}&type=track&limit=${limit}&offset=${offset}&market=IL`
   return makeSpotifyRequest(endpoint)
 }
 
 async function searchArtists(query, limit = 5, offset = 0) {
-  const endpoint = `/search?q=${encodeURIComponent(query)}&type=artist&limit=${limit}&offset=${offset}`
+  const endpoint = `/search?q=${encodeURIComponent(query)}&type=artist&limit=${limit}&offset=${offset}&market=IL`
   return makeSpotifyRequest(endpoint)
 }
 
@@ -241,7 +242,26 @@ async function getArtist(artistId) {
 
 async function getArtistData(artistId) {
   let artist = await getArtist(artistId)
-  let tracks = await getSearchedTracks(artist.name, 5)
+  let tracksResponse = await getArtistTopTracks(artistId)
+  let tracks = tracksResponse.tracks || []
+  if (!Array.isArray(tracks)) {
+   
+    tracks = []
+  }
+  let topTracks = tracks.map((track) => {
+    return {
+      spotifyId: track.id,
+      name: track.name,
+      album: { name: track.album.name, imgUrl: track.album.images[0].url, spotifyId: track.album.id },
+      artists: [
+        {
+          name: track.artists.map((artist) => artist.name).join(', '),
+          id: track.artists.map((artist) => artist.id),
+        },
+      ],
+      duration: formatDuration(track.duration_ms),
+      youtubeId: null,
+}})
 
   artist = {
     id: artist.id,
@@ -249,9 +269,9 @@ async function getArtistData(artistId) {
     imgUrls: artist.images.map((img) => img.url),
     followers: artist.followers.total,
     genres: artist.genres,
-    topTracks: tracks,
+    topTracks: topTracks,
   }
-
+ 
   return artist
 }
 
@@ -421,4 +441,9 @@ async function getGenrePlaylists(genre) {
     console.error('Error fetching genres/categories:', error)
     throw error
   }
+}
+
+async function getArtistTopTracks(artistId) {
+  const endpoint = `/artists/${artistId}/top-tracks`
+  return makeSpotifyRequest(endpoint)
 }
