@@ -33,7 +33,9 @@ if (process.env.NODE_ENV === 'production') {
             'http://localhost:5173',
              'http://localhost:5174',
              'http://10.100.102.25:5174',
-             'http://localhost:4173'
+             'http://localhost:4173',
+             'http://10.100.102.19:5173'
+             
         ],
         credentials: true
     }
