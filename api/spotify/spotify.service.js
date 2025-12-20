@@ -42,8 +42,8 @@ async function getAccessToken() {
   }
 }
 
-async function getSpotifyItems(item, query, limit) {
-  // console.log('item,query:', item, query)
+async function getSpotifyItems(item, query='', limit) {
+
   const funcs = {
     track: async () => await searchTracks(query),
     artists: async () => await getSearchArtists(query),
