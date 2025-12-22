@@ -42,7 +42,7 @@ async function getAccessToken() {
   }
 }
 
-async function getSpotifyItems(item, query, limit) {
+async function getSpotifyItems(item, query='', limit) {
 
   const funcs = {
     track: async () => await searchTracks(query),
