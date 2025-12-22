@@ -42,7 +42,7 @@ async function getAccessToken() {
   }
 }
 
-async function getSpotifyItems(item, query='', limit) {
+async function getSpotifyItems(item, query, limit) {
 
   const funcs = {
     track: async () => await searchTracks(query),
@@ -51,7 +51,7 @@ async function getSpotifyItems(item, query='', limit) {
     artist: async () => await getArtist(query),
     getFullTrackData: async () => await getFullTrackData(query),
     album:async() => await getAlbum(query),
-    albumReleases: async () => await getNewAlbumsReleases(),
+    albumReleases: async () => await getNewAlbumsReleases(query),
     search: async () => await getSearchedTracks(query, limit),
     albums: async () => await getSearchedAlbums(query, limit),
     getAlbumNewRelease: async () => await getAlbumNewRelease(query, limit),
