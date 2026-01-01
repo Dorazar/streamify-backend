@@ -16,7 +16,7 @@
 **end-to-end** as a full-stack project.
 
 🎧 **Live Demo**  
-👉 https://lnkd.in/deq4SBgt  
+👉 https://streamify2-dusf.onrender.com/
 
 ---
 
@@ -83,3 +83,4 @@ It quickly evolved into a real-world **Full-Stack journey**, involving:
 
 🚧 **Active Project**  
 Streamify is continuously evolving, with new features and improvements added over time.
+
